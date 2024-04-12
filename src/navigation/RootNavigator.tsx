@@ -11,9 +11,12 @@ import PokemonDetails from '../screens/PokemonDetails';
 import CheckoutScreen from '../screens/PokemonDetails';
 import {NavigationConstants} from './Navigation.constants';
 import Bookmark from '../screens/Bookmark';
+import Confirmation from '../screens/Confirmation';
+import {Image} from 'react-native';
 
 const BottomNav = createBottomTabNavigator();
 const PokeScreens = createNativeStackNavigator();
+const CartScreens = createNativeStackNavigator();
 
 const PokeScreensNavigator = () => {
   return (
@@ -33,18 +36,54 @@ const PokeScreensNavigator = () => {
         component={PokemonDetails}
         options={{title: 'Details'}}
       />
-      <PokeScreens.Screen
-        name={NavigationConstants.CHECKOUTSCREEN}
-        component={CheckoutScreen}
-      />
     </PokeScreens.Navigator>
   );
 };
+const CartScreensNavigator = () => {
+  return (
+    <CartScreens.Navigator initialRouteName={NavigationConstants.CART}>
+      <CartScreens.Screen name={NavigationConstants.CART} component={Cart} />
+      <CartScreens.Screen
+        name={NavigationConstants.CHECKOUTSCREEN}
+        component={CheckoutScreen}
+      />
+      <CartScreens.Screen
+        name={NavigationConstants.CONFIRMATION}
+        component={Confirmation}
+      />
+    </CartScreens.Navigator>
+  );
+};
+
 const BottomTabNavigator = () => {
   return (
     <BottomNav.Navigator screenOptions={{headerShown: false}}>
-      <BottomNav.Screen name="Home" component={PokeScreensNavigator} />
-      <BottomNav.Screen name="Cart" component={Cart} />
+      <BottomNav.Screen
+        name="Home"
+        options={{
+          tabBarLabel: 'Home Screen',
+          tabBarIcon: ({color, size}) => (
+            <Image
+              style={{width: 24, height: 24}}
+              source={require('../assets/icons/homeicon/home.png')}
+            />
+          ),
+        }}
+        component={PokeScreensNavigator}
+      />
+      <BottomNav.Screen
+        name="Cart"
+        component={CartScreensNavigator}
+        options={{
+          tabBarLabel: 'Cart',
+          tabBarIcon: () => (
+            <Image
+              style={{width: 24, height: 24}}
+              source={require('../assets/icons/cartIcons/cart.png')}
+            />
+          ),
+        }}
+      />
     </BottomNav.Navigator>
   );
 };

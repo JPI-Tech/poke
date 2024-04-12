@@ -1,68 +1,63 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-
-export interface CartItem {
-  id: number;
-  name: string;
-  qty: number;
-  sum: number;
-  cost: number;
-}
+import {Pokemon} from '../pokemon/pokemon.slice';
 
 interface CartState {
-  items: CartItem[];
-  orders: [];
+  items: Pokemon[];
 }
 
 const initialState: CartState = {
   items: [],
-  orders: [],
 };
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<CartItem>) => {
-      const existingItem = state.items.find(
-        item => item.id == action.payload.id,
-      );
+    addToCart: (state, action: PayloadAction<Pokemon>) => {
+      const {id} = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
       if (existingItem) {
-        existingItem.qty += 1;
-        existingItem.sum += action.payload?.cost;
+        existingItem.quantity!++;
       } else {
         state.items.push({
           ...action.payload,
-          qty: 1,
-          sum: action.payload?.cost,
+          quantity: 1,
+          cost: calculateCost(action.payload),
         });
       }
     },
-    removeItem: (state, action: PayloadAction<number>) => {
-      const existingItem = state.items.find(
-        item => item.id == action.payload.id,
-      );
-
-      if (existingItem && existingItem.qty != 1) {
-        existingItem.qty -= 1;
-        existingItem.sum -= action.payload?.cost;
-      } else {
-        state.items = state.items.filter(item => item.id !== action.payload.id);
+    incrementQuantity(state, action) {
+      const {id} = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity! += 1;
       }
     },
-    addOrder: (state, action: PayloadAction<number>) => {
-      state.orders = [
-        ...state.orders,
-        {
-          id: new Date().toString(),
-          totalAmount: action.payload.sum,
-          date: new Date().toISOString(),
-        },
-      ];
+    decrementQuantity(state, action) {
+      const {id} = action.payload;
+      const existingItem = state.items.find(item => item.id === id);
+      if (existingItem && existingItem.quantity! > 1) {
+        existingItem.quantity! -= 1;
+      }
+    },
+    removeItem: (state, action: PayloadAction) => {
+      state.items = state.items.filter(item => item.id !== action.payload?.id);
+    },
+    clearCart: state => {
       state.items = [];
     },
   },
 });
 
-export const {addItem, removeItem, addOrder} = cartSlice.actions;
+export const {
+  addToCart,
+  removeItem,
+  clearCart,
+  incrementQuantity,
+  decrementQuantity,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
+const calculateCost = (item: Pokemon) => {
+  return item.weight * 0.38; // Just an example calculation
+};

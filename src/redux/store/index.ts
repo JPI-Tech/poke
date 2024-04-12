@@ -17,7 +17,7 @@ import persistStore from 'redux-persist/es/persistStore';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: [''],
+  whitelist: ['pokemon'],
 };
 
 const rootReducer = combineReducers({

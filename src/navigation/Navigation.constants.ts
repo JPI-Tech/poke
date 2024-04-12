@@ -4,4 +4,5 @@ export enum NavigationConstants {
   CHECKOUTSCREEN = 'CheckoutScreen',
   CART = 'Cart',
   BOOKMARK = 'Bookmark',
+  CONFIRMATION = 'Confirmation',
 }
