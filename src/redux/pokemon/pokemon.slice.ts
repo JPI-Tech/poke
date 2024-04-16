@@ -2,7 +2,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 const pokePath = 'https://pokeapi.co/api/v2/';
-const pokeQuery = 'pokemon?limit=30&offset=0';
+const pokeQuery = 'pokemon?limit=200&offset=0';
 const pokemonList = `${pokePath}${pokeQuery}`;
 
 export const fetchPokemonData = createAsyncThunk<any>(

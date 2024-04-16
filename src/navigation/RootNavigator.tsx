@@ -13,6 +13,8 @@ import {NavigationConstants} from './Navigation.constants';
 import Bookmark from '../screens/Bookmark';
 import Confirmation from '../screens/Confirmation';
 import {Image} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState} from '../redux/store';
 
 const BottomNav = createBottomTabNavigator();
 const PokeScreens = createNativeStackNavigator();
@@ -56,6 +58,7 @@ const CartScreensNavigator = () => {
 };
 
 const BottomTabNavigator = () => {
+  const {items} = useSelector((state: RootState) => state.cart);
   return (
     <BottomNav.Navigator screenOptions={{headerShown: false}}>
       <BottomNav.Screen
@@ -82,6 +85,7 @@ const BottomTabNavigator = () => {
               source={require('../assets/icons/cartIcons/cart.png')}
             />
           ),
+          tabBarBadge: items.length || undefined,
         }}
       />
     </BottomNav.Navigator>

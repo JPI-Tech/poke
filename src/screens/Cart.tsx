@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {removeItem} from '../redux/cart/cart.slice';
+import {Pokemon} from '../redux/pokemon/pokemon.slice';
 
 const Cart = () => {
   const navigation = useNavigation();
@@ -43,12 +44,16 @@ const Cart = () => {
     weight: number;
     cost?: number;
     image: string;
-    item: any;
+    item: Pokemon;
   }) => {
     const {name, weight, image, item} = props;
 
     return (
-      <View style={styles.checkoutItemContainer}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate(NavigationConstants.POKEDETAILS, {item})
+        }
+        style={styles.checkoutItemContainer}>
         <View style={styles.checkoutItemRow}>
           <Image
             style={styles.item}
@@ -76,7 +81,7 @@ const Cart = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -88,17 +93,19 @@ const Cart = () => {
           <Text style={{marginTop: 5}}>Items</Text>
         </View>
         <View style={styles.divider} />
-        <FlatList
-          data={items}
-          renderItem={({item}) => (
-            <CheckoutItem
-              item={item}
-              name={item.name}
-              weight={item.weight}
-              image={item?.sprites!.front_default!}
-            />
-          )}
-        />
+        {items && (
+          <FlatList
+            data={items}
+            renderItem={({item}) => (
+              <CheckoutItem
+                item={item}
+                name={item.name}
+                weight={item.weight}
+                image={item?.sprites!.front_default!}
+              />
+            )}
+          />
+        )}
         <View style={styles.divider} />
       </ScrollView>
       <View style={styles.totalContainer}>
